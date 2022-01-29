@@ -648,8 +648,12 @@ end
 ---------------------- TELEPORT CFRAME
 if First_Sea then
 
-section1:addButton("Stop Tween", _G.StopTween, function(S)
-    _G.StopTween = S
+section1:addButton("Teleport Second Sea", function()
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
+end)
+
+section1:addButton("Teleport Third Sea", function()
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
 end)
 
 section1:addButton("Midle Town", function()
@@ -719,6 +723,14 @@ end
 
 if Second_Sea then
 
+section1:addButton("Teleport First Sea", function()   
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelMain")
+end)
+
+section1:addButton("Teleport Third Sea", function()
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
+end)
+
 section1:addButton("Dock",function()
     TP2(CFrame.new(82.9490662, 18.0710983, 2834.98779))
 end)
@@ -785,6 +797,14 @@ end)
 end
 
 if Third_Sea then
+
+section1:addButton("Teleport First Sea", function()   
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelMain")
+end)
+
+section1:addButton("Teleport Second Sea", function()
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
+end)
 
 section1:addButton("Port Towen",function()
     TP2(CFrame.new(-610.309692, 57.8323097, 6436.33594))
