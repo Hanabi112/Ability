@@ -563,10 +563,41 @@ function equip()
     end)
 end
 
-section1:addToggle("Auto Superhuman", _G.Auto_Superhuman, function(S)
+local section2 = page:addSection("Auto Function")
+
+section2:addToggle("Auto Superhuman", _G.Auto_Superhuman, function(S)
     Superhuman = S
 end)
 
+if First_Sea then
+
+section2:addToggle("Auto New World", _G.AutoNewWord, function(vu)
+    AutoFarm:Toggle("Auto New World", _G.AutoNewworld, function(vu)
+		Auto_Newworld = vu
+		if vu == false then
+			wait(1)
+			TP(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+		end
+	end)
+end)
+end
+
+if Second_Sea then
+
+section2:addToggle("Auto Third Sea", _G.AutoThirdWord, function(vu)
+        ReadyThirdSea = vu
+        TP(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+        if ReadyThirdSea and game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") ~= 3 then
+            venyx:Notify("Auto Third Sea","u must have\n Finish Bartilo Quest","Ok")
+        elseif ReadyThirdSea and game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("ZQuestProgress","Check") ~= 0 then
+            venyx:Notify("Auto Third Sea","u must have to Killed Don Swan First","Ok")
+        elseif ReadyThirdSea and SelectToolWeapon == "" then
+            venyx:Notify("Auto Third Sea","Select Weapon First","Ok")
+        else
+            AutoThird = vu
+        end
+    end)
+end
 ------------------------------------------------------------------- PAGE Stats
 
 
@@ -603,12 +634,122 @@ PointStats = 1
 section2:addSlider("Point", 1, 1, 100, PointStats, function(v)
    PointStats = v
 end)
+-------------------------------------------------------------------- PAGE EPS
+local page = venyx:addPage("Raid", 5012544693)
+local section1 = page:addSection("Riad")
+
+if Second_Sea then
+    section1:addButton("Teleport To Lab", function()
+	TP2(CFrame.new(-6434.58, 250.655, -4501.41))
+end)
+end
+
+if Third_Sea then
+    section1:addButton("Teleport To RaidLab", function()
+	TP2(CFrame.new(-5057.146484375, 314.54132080078, -2934.7995605469))
+end)
+end
+
+section1:addToggle("Kill Aura", false, function(vu)
+    Killaura = vu
+end)
+spawn(function()
+    while wait() do
+        if Killaura then
+            for i,v in pairs(game.Workspace.Enemies:GetDescendants()) do
+                if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then
+                    pcall(function()
+                        repeat wait(.1)
+                            sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", math.huge)
+                            v.Humanoid.Health = 0
+                            v.HumanoidRootPart.CanCollide = false
+                            v.HumanoidRootPart.Size = Vector3.new(50,50,50)
+                            v.HumanoidRootPart.Transparency = 0.8
+                        until not Killaura or not _G.AutoRaid or not RaidSuperhuman or not v.Parent or v.Humanoid.Health <= 0
+                    end)
+                end
+            end
+        end
+    end
+end)
+
+section1:addToggle("Auto Awakenr", false, function(vu)
+    AutoAwakener = vu
+end)
+spawn(function()
+	pcall(function()
+		while wait(.1) do
+			if AutoAwakener then
+				local args = {
+					[1] = "Awakener",
+					[2] = "Check"
+				}
+				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+				local args = {
+					[1] = "Awakener",
+					[2] = "Awaken"
+				}
+				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+			end
+		end
+	end)
+end)
+
+section1:addToggle("Auto Next Island", false, function(vu)
+    NextIsland = vu
+end)
+spawn(function()
+	pcall(function()
+		while game:GetService("RunService").Heartbeat:wait() do
+			if NextIsland then
+				if game:GetService("Players")["LocalPlayer"].PlayerGui.Main.Timer.Visible == true and game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 5") or game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 4") or game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 3") or game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 2") or game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
+					if game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 5") then
+						TP(game:GetService("Workspace")["_WorldOrigin"].Locations["Island 5"].CFrame*CFrame.new(0,80,0))
+					elseif game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 4") then
+						TP(game:GetService("Workspace")["_WorldOrigin"].Locations["Island 4"].CFrame*CFrame.new(0,80,0))
+					elseif game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 3") then
+						TP(game:GetService("Workspace")["_WorldOrigin"].Locations["Island 3"].CFrame*CFrame.new(0,80,0))
+					elseif game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 2") then
+						TP(game:GetService("Workspace")["_WorldOrigin"].Locations["Island 2"].CFrame*CFrame.new(0,80,0))
+					elseif game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
+						TP(game:GetService("Workspace")["_WorldOrigin"].Locations["Island 1"].CFrame*CFrame.new(0,80,0))
+					end
+				elseif Second_Sea then
+					TP(CFrame.new(-6438.73535, 250.645355, -4501.50684))
+				elseif Third_Sea then
+					TP(CFrame.new(-5057.146484375, 314.54132080078, -2934.7995605469))
+				end
+			end
+		end
+	end)
+end)
+
+section1:addDropdown("Select Raid", {"Flame","Ice","Quake","Light","Dark","String","Rumble","Magma","Human: Buddha"}, function(vu)
+    _G.SelectRaid = vu
+end)
+
+section1:addToggle("Auto Buy Chip", false, function(vu)
+    AutoBuychip = vu
+end)
+    spawn(function()
+        pcall(function()
+            while wait() do
+                if AutoBuychip then
+                    if not game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Special Microchip") or not game:GetService("Players").LocalPlayer.Character:FindFirstChild("Special Microchip") then
+                        if not game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("RaidsNpc", "Select", _G.SelectRaid)
+                        end
+                    end
+                end
+            end
+        end)
+    end)
 
 -------------------------------------------------------- PAGE Teleport
 
 local page = venyx:addPage("Teleport", 5012544693)
 local section1 = page:addSection("Teleport !")
-
+local section2 = page:addSection("")
 
 function TP(P1)
     Distance = (P1.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
@@ -645,78 +786,79 @@ function TP2(P1)
     Clip = false
 end
 
+
 ---------------------- TELEPORT CFRAME
 if First_Sea then
 
-section1:addButton("Teleport Second Sea", function()
+section2:addButton("Teleport Second Sea", function()
     game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
 end)
 
-section1:addButton("Teleport Third Sea", function()
+section2:addButton("Teleport Third Sea", function()
     game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
 end)
 
-section1:addButton("Midle Town", function()
+section2:addButton("Midle Town", function()
     TP2(CFrame.new(-655.97088623047, 7.878026008606, 1573.7612304688))
 end)
 
-section1:addButton("Wild Mill", function()
+section2:addButton("Wild Mill", function()
     TP2(CFrame.new(1042.1501464844, 16.299360275269, 1444.3442382813))
 end)
 
-section1:addButton("Jungle", function()
+section2:addButton("Jungle", function()
     TP2(CFrame.new(-1337.4604492188, 11.852861404419, 497.52340698242))
 end)
 
-section1:addButton("Pirate", function()
+section2:addButton("Pirate", function()
     TP2(CFrame.new(-1163.3889160156, 44.777843475342, 3842.8276367188))
 end)
 
-section1:addButton("Desert", function()
+section2:addButton("Desert", function()
     TP2(CFrame.new(954.02056884766, 6.6275520324707, 4262.611328125))
 end)
 
-section1:addButton("Frozen Village", function()
+section2:addButton("Frozen Village", function()
     TP2(CFrame.new(1144.5270996094, 7.3292083740234, -1164.7322998047))
 end)
 
-section1:addButton("Colosseum", function()
+section2:addButton("Colosseum", function()
     TP2(CFrame.new(-1667.5869140625, 39.385631561279, -3135.5817871094))
 end)
 
-section1:addButton("Prison", function()
+section2:addButton("Prison", function()
     TP2(CFrame.new(4857.6982421875, 5.6780304908752, 732.75750732422))
 end)
 
-section1:addButton("Mob Leader", function()
+section2:addButton("Mob Leader", function()
     TP2(CFrame.new(-2841.9604492188, 7.3560485839844, 5318.1040039063))
 end)
 
-section1:addButton("Magma Village", function()
+section2:addButton("Magma Village", function()
     TP2(CFrame.new(-5328.8740234375, 8.6164798736572, 8427.3994140625))
 end)
 
-section1:addButton("UnderWater Gate", function()
+section2:addButton("UnderWater Gate", function()
     TP2(CFrame.new(3893.953125, 5.3989524841309, -1893.4851074219))
 end)
 
-section1:addButton("UnderWater City", function()
+section2:addButton("UnderWater City", function()
     TP2(CFrame.new(61191.12109375, 18.497436523438, 1561.8873291016))
 end)
 
-section1:addButton("Fountain City", function()
+section2:addButton("Fountain City", function()
     TP2(CFrame.new(5244.7133789063, 38.526943206787, 4073.4987792969))
 end)
 
-section1:addButton("Sky 1st", function()
+section2:addButton("Sky 1st", function()
     TP2(CFrame.new(-4878.0415039063, 717.71246337891, -2637.7294921875))
 end)
 
-section1:addButton("Sky 2nd", function()
+section2:addButton("Sky 2nd", function()
     TP2(CFrame.new(-7899.6157226563, 5545.6030273438, -422.21798706055))
 end)
 
-section1:addButton("Sky 3rd", function()
+section2:addButton("Sky 3rd", function()
    TP2(CFrame.new(-7868.5288085938, 5638.205078125, -1482.5548095703))
 end)
 end
@@ -735,63 +877,63 @@ section1:addButton("Dock",function()
     TP2(CFrame.new(82.9490662, 18.0710983, 2834.98779))
 end)
 
-section1:addButton("Flamingo Room",function()
+section2:addButton("Flamingo Room",function()
     TP2(CFrame.new(2302.19019, 15.1778421, 663.811035))
 end)
 
-section1:addButton("Mansion",function()
+section2:addButton("Mansion",function()
     TP2(CFrame.new(-390.096313, 331.886475, 673.464966))
 end)
 
-section1:addButton("Cafe",function()
+section2:addButton("Cafe",function()
     TP2(CFrame.new(-385.250916, 73.0458984, 297.388397))
 end)
 
-section1:addButton("Green Zone",function()
+section2:addButton("Green Zone",function()
     TP2(CFrame.new(-2372.14697, 72.9919434, -3166.51416))
 end)
 
-section1:addButton("Kingdom of Rose",function()
+section2:addButton("Kingdom of Rose",function()
     TP2(CFrame.new(-394.983521, 118.503128, 1245.8446))
 end)
 
-section1:addButton("Factroy",function()
+section2:addButton("Factroy",function()
     TP2(CFrame.new(430.42569, 210.019623, -432.504791))
 end)
 
-section1:addButton("Big Colosseum",function()
+section2:addButton("Big Colosseum",function()
     TP2(CFrame.new(-1836.58191, 44.5890656, 1360.30652))
 end)
 
-section1:addButton("GraveIsland",function()
+section2:addButton("GraveIsland",function()
     TP2(CFrame.new(-5411.47607, 48.8234024, -721.272522))
 end)
 
-section1:addButton("Snow Mountain",function()
+section2:addButton("Snow Mountain",function()
     TP2(CFrame.new(511.825226, 401.765198, -5380.396))
 end)
 
-section1:addButton("Cold Island",function()
+section2:addButton("Cold Island",function()
     TP2(CFrame.new(-6026.96484, 14.7461271, -5071.96338))
 end)
 
-section1:addButton("Hot Island",function()
+section2:addButton("Hot Island",function()
     TP2(CFrame.new(-5478.39209, 15.9775667, -5246.9126))
 end)
 
-section1:addButton("Cursed Ship",function()
+section2:addButton("Cursed Ship",function()
     TP2(CFrame.new(902.059143, 124.752518, 33071.8125))
 end)
 
-section1:addButton("IceCastle",function()
+section2:addButton("IceCastle",function()
     TP2(CFrame.new(5400.40381, 28.21698, -6236.99219))
 end)
 
-section1:addButton("Forgotten Island",function()
+section2:addButton("Forgotten Island",function()
     TP2(CFrame.new(-3043.31543, 238.881271, -10191.5791))
 end)
 
-section1:addButton("Usoapp Island",function()
+section2:addButton("Usoapp Island",function()
     TP2(CFrame.new(4748.78857, 8.35370827, 2849.57959))
 end)
 end
@@ -806,40 +948,40 @@ section1:addButton("Teleport Second Sea", function()
     game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
 end)
 
-section1:addButton("Port Towen",function()
+section2:addButton("Port Towen",function()
     TP2(CFrame.new(-610.309692, 57.8323097, 6436.33594))
 end)
-section1:addButton("Hydra Island",function()
+section2:addButton("Hydra Island",function()
     TP2(CFrame.new(5229.99561, 603.916565, 345.154022))
 end)
-section1:addButton("Great Tree",function()
+section2:addButton("Great Tree",function()
     TP2(CFrame.new(2174.94873, 28.7312393, -6728.83154))
 end)
-section1:addButton("Castle on the Sea",function()
+section2:addButton("Castle on the Sea",function()
     TP2(CFrame.new(-5477.62842, 313.794739, -2808.4585))
 end)
-section1:addButton("Floating Turtle",function()
+section2:addButton("Floating Turtle",function()
     TP2(CFrame.new(-10919.2998, 331.788452, -8637.57227))
 end)
-section1:addButton("Mansion",function()
+section2:addButton("Mansion",function()
     TP2(CFrame.new(-12553.8125, 332.403961, -7621.91748))
 end)
-section1:addButton("Secret Temple",function()
+section2:addButton("Secret Temple",function()
     TP2(CFrame.new(5217.35693, 6.56511116, 1100.88159))
 end)
-section1:addButton("Friendly Arena",function()
+section2:addButton("Friendly Arena",function()
     TP2(CFrame.new(5220.28955, 72.8193436, -1450.86304))
 end)
-section1:addButton("Beautiful Pirate Domain",function()
+section2:addButton("Beautiful Pirate Domain",function()
     TP2(CFrame.new(5310.8095703125, 21.594484329224, 129.39053344727))
 end)
-section1:addButton("Teler Park",function()
+section2:addButton("Teler Park",function()
     TP2(CFrame.new(-9512.3623046875, 142.13258361816, 5548.845703125))
 end)
-section1:addButton("Peanut Island",function()
+section2:addButton("Peanut Island",function()
     TP2(CFrame.new(-2062.67773, 38.1294556, -10287.752, -0.258864403, 0, -0.965913653, 0, 1, 0, 0.965913653, 0, -0.258864403))
 end)
-section1:addButton("Ice Cream Island",function()
+section2:addButton("Ice Cream Island",function()
     TP2(CFrame.new(-840.188477, 65.8452759, -10877.3789, -0.573598981, 0, 0.819136262, 0, 1, 0, -0.819136262, 0, -0.573598981))
 end)
 end
@@ -1643,6 +1785,239 @@ spawn(function()
 		end
 	end)
 end)
-
+spawn(function()
+    while wait(.1) do
+        if Auto_Newworld then
+            local Lv = game.Players.LocalPlayer.Data.Level.Value
+            if Lv >= 700 and Old_World then
+                Auto_Farm = false
+                if game.Workspace.Map.Ice.Door.CanCollide == true and game.Workspace.Map.Ice.Door.Transparency == 0 then
+                    TP2(CFrame.new(4851.8720703125, 5.6514348983765, 718.47094726563))
+                    wait(.5)
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("DressrosaQuestProgress","Detective")
+                    EquipWeapon("Key")
+                    TP2(CFrame.new(1347.7124, 37.3751602, -1325.6488))
+                    wait(3)
+                elseif game.Workspace.Map.Ice.Door.CanCollide == false and game.Workspace.Map.Ice.Door.Transparency == 1 then
+                    if game:GetService("Workspace").Enemies:FindFirstChild("Ice Admiral [Lv. 700] [Boss]") then
+                        for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                            if v.Name == "Ice Admiral [Lv. 700] [Boss]" and v.Humanoid.Health > 0 then
+                                repeat game:GetService("RunService").Heartbeat:wait()
+                                    pcall(function()
+                                        EquipWeapon(SelectToolWeapon)
+                                        TP(v.HumanoidRootPart.CFrame * CFrame.new(0, 25, 25))
+                                        v.HumanoidRootPart.CanCollide = false
+                                        v.HumanoidRootPart.Size = Vector3.new(60,60,60)
+                                        v.HumanoidRootPart.Transparency = .8
+                                        game:GetService("VirtualUser"):CaptureController()
+                                        game:GetService("VirtualUser"):Button1Down(Vector2.new(1280, 870),workspace.CurrentCamera.CFrame)
+                                    end)
+                                until v.Humanoid.Health <= 0 or not v.Parent
+                                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
+                            end
+                        end
+                    else
+                        TP2(CFrame.new(1347.7124, 37.3751602, -1325.6488))
+                    end
+                else
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
+                end
+            end
+        end
+    end
+end)
+spawn(function()
+    pcall(function()
+        while wait() do
+            if AutoThird then
+                if game:GetService("Players").LocalPlayer.Data.Level.Value >= 1500 and New_World then
+                    Auto_Farm = false
+                    if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("ZQuestProgress","Check") == 0 then
+                        TP2(CFrame.new(-1926.3221435547, 12.819851875305, 1738.3092041016))
+                        if (CFrame.new(-1926.3221435547, 12.819851875305, 1738.3092041016).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 10 then
+                            wait(1.1)
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("ZQuestProgress","Begin")
+                        end
+                        wait(2)
+                        if game:GetService("Workspace").Enemies:FindFirstChild("rip_indra [Lv. 1500] [Boss]") then
+                            for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                                if v.Name == "rip_indra [Lv. 1500] [Boss]" then
+                                    repeat game:GetService("RunService").Heartbeat:wait()
+                                        pcall(function()
+                                            EquipWeapon(SelectToolWeapon)
+                                            TP(v.HumanoidRootPart.CFrame * CFrame.new(0,25,25))
+                                            require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework).activeController.hitboxMagnitude = 1000
+                                            game:GetService'VirtualUser':CaptureController()
+                                            game:GetService'VirtualUser':Button1Down(Vector2.new(1280, 672))
+                                            FoundIndra = true
+                                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
+                                            sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", math.huge)
+                                        end)
+                                    until AutoThird == false or v.Humanoid.Health <= 0 or not v.Parent
+                                end
+                            end
+                        elseif not game:GetService("Workspace").Enemies:FindFirstChild("rip_indra [Lv. 1500] [Boss]") and (CFrame.new(-26880.93359375, 22.848554611206, 473.18951416016).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 1000 then
+                            TP(CFrame.new(-26880.93359375, 22.848554611206, 473.18951416016))
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end)
+spawn(function()
+    while wait(.1) do
+        if AutoBartilo then
+            if game.Players.LocalPlayer.Data.Level.Value >= 850 and game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 0 then
+                if string.find(game.Players.LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text, "Swan Pirates") and string.find(game.Players.LocalPlayer.PlayerGui.Main.Quest.Container.QuestTitle.Title.Text, "50") and game.Players.LocalPlayer.PlayerGui.Main.Quest.Visible == true then 
+                    if game:GetService("Workspace").Enemies:FindFirstChild("Swan Pirate [Lv. 775]") then
+                        for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                            if v.Name == "Swan Pirate [Lv. 775]" then
+                                pcall(function()
+                                    repeat wait(.1)
+                                        EquipWeapon(MiscFarmWeapon)
+										game:GetService'VirtualUser':CaptureController()
+										game:GetService'VirtualUser':Button1Down(Vector2.new(1280, 672))
+										TP(v.HumanoidRootPart.CFrame * CFrame.new(0,15,0))
+										require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework).activeController.hitboxMagnitude = 1000
+										PosMonBartilo = v.HumanoidRootPart.CFrame
+										MagnetBatilo = true
+                                    until not v.Parent or v.Humanoid.Health <= 0 or AutoBartilo == false or game.Players.LocalPlayer.PlayerGui.Main.Quest.Visible == false
+									MagnetBatilo = false
+                                end)
+                            end
+                        end
+                    else
+						MagnetBatilo = false
+						TP(CFrame.new(1057.92761, 137.614319, 1242.08069))
+                    end
+                else
+					TP2(CFrame.new(-456.28952, 73.0200958, 299.895966))
+					if (Vector3.new(-456.28952, 73.0200958, 299.895966) - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 30 then
+						wait(1.1)
+                    	game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StartQuest","BartiloQuest",1)
+					end
+                end
+            elseif game.Players.LocalPlayer.Data.Level.Value >= 850 and game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 1 then
+                if QuestBartilo == nil then
+				    TP2(CFrame.new(-456.28952, 73.0200958, 299.895966))
+                end
+                if (Vector3.new(-456.28952, 73.0200958, 299.895966) - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 30 then
+                    wait(1.1)
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo")
+                    QuestBartilo = 1
+                end
+				if game.Workspace.Enemies:FindFirstChild("Jeremy [Lv. 850] [Boss]") then
+					for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+						if v.Name == "Jeremy [Lv. 850] [Boss]" then
+							repeat wait(.1)
+								sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", math.huge)
+								require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework).activeController.hitboxMagnitude = 1000
+								EquipWeapon(MiscFarmWeapon)
+								TP(v.HumanoidRootPart.CFrame * CFrame.new(0,15,6))
+								game:GetService'VirtualUser':CaptureController()
+								game:GetService'VirtualUser':Button1Down(Vector2.new(1280, 672))
+							until not v.Parent or v.Humanoid.Health <= 0 or AutoBartilo == false
+						end
+					end
+                else
+                    if QuestBartilo == 1 then
+                        TP(CFrame.new(1931.5931396484, 402.67391967773, 956.52215576172))
+                    end
+				end
+            elseif game.Players.LocalPlayer.Data.Level.Value >= 850 and game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 2 then
+                TP2(game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate1.CFrame)
+                wait(1)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate2.CFrame
+                wait(1)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate3.CFrame
+                wait(1)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate4.CFrame
+                wait(1)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate5.CFrame
+                wait(1)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate6.CFrame
+                wait(1)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate7.CFrame
+                wait(1)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Dressrosa.BartiloPlates.Plate8.CFrame
+                wait(1)
+            end
+        end 
+    end
+end)
+spawn(function()
+    pcall(function()
+        while wait() do
+            if AutoThird then
+                if game:GetService("Players").LocalPlayer.Data.Level.Value >= 1500 and New_World then
+                    Auto_Farm = false
+                    if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("ZQuestProgress","Check") == 0 then
+                        TP2(CFrame.new(-1926.3221435547, 12.819851875305, 1738.3092041016))
+                        if (CFrame.new(-1926.3221435547, 12.819851875305, 1738.3092041016).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 10 then
+                            wait(1.1)
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("ZQuestProgress","Begin")
+                        end
+                        wait(2)
+                        if game:GetService("Workspace").Enemies:FindFirstChild("rip_indra [Lv. 1500] [Boss]") then
+                            for i,v in pairs(game:GetService("Workspace").Enemies:GetChildren()) do
+                                if v.Name == "rip_indra [Lv. 1500] [Boss]" then
+                                    repeat game:GetService("RunService").Heartbeat:wait()
+                                        pcall(function()
+                                            EquipWeapon(SelectToolWeapon)
+                                            TP(v.HumanoidRootPart.CFrame * CFrame.new(0,25,25))
+                                            require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework).activeController.hitboxMagnitude = 1000
+                                            game:GetService'VirtualUser':CaptureController()
+                                            game:GetService'VirtualUser':Button1Down(Vector2.new(1280, 672))
+                                            FoundIndra = true
+                                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
+                                            sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", math.huge)
+                                        end)
+                                    until AutoThird == false or v.Humanoid.Health <= 0 or not v.Parent
+                                end
+                            end
+                        elseif not game:GetService("Workspace").Enemies:FindFirstChild("rip_indra [Lv. 1500] [Boss]") and (CFrame.new(-26880.93359375, 22.848554611206, 473.18951416016).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 1000 then
+                            TP(CFrame.new(-26880.93359375, 22.848554611206, 473.18951416016))
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end)
+function UpdateDevilFruit()
+	for i,v in pairs(game:GetService("Workspace"):GetChildren()) do
+		pcall(function()
+			if string.find(v.Name, "Fruit") then
+				if DevilESP then
+					if string.find(v.Name, "Fruit") then
+						if not v.Handle:FindFirstChild("DevilESP"..Number) then
+							local Bb = Instance.new("BillboardGui", v.Handle)
+							Bb.Name = "DevilESP"..Number
+							Bb.ExtentsOffset = Vector3.new(0, 1, 0)
+							Bb.Size = UDim2.new(1, 200, 1, 30)
+							Bb.Adornee = v.Handle
+							Bb.AlwaysOnTop = true
+							local Textlb = Instance.new("TextLabel", Bb)
+							Textlb.Font = "GothamBold"
+							Textlb.FontSize = "Size14"
+							Textlb.Size = UDim2.new(1,0,1,0)
+							Textlb.BackgroundTransparency = 1
+							Textlb.TextStrokeTransparency = 0.5
+							Textlb.Text = v.Name.."\n"..math.round((v.Handle.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).Magnitude/3).." m."
+							Textlb.TextColor3 = Color3.new(255, 255, 255)
+						else
+							v.Handle["DevilESP"..Number].TextLabel.Text = v.Name.."\n"..math.round((v.Handle.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).Magnitude/3).." m."
+						end
+					end
+				else
+					if v.Handle:FindFirstChild("DevilESP"..Number) then
+						v.Handle:FindFirstChild("DevilESP"..Number):Destroy()
+					end
+				end
+			end
+		end)
+	end
+end
 
 venyx:SelectPage(venyx.pages[1], true)
